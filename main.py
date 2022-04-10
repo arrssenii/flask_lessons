@@ -1,42 +1,38 @@
-from flask import Flask, url_for
+from flask import Flask
+from data import db_session
+from data.users import User
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 
 
-@app.route('/')
-def main_page():
-    return "Миссия Колонизация Марса"
+def main():
+    db_session.global_init("db/blogs.db")
+    # app.run()
 
 
-@app.route('/index')
-def index():
-    return "И на Марсе будут яблони цвести!"
-
-
-@app.route('/promotion')
-def promote():
-    promote_list = ['Человечество вырастает из детства.', 'Человечеству мала одна планета.',
-                    'Мы сделаем обитаемыми безжизненные пока планеты.',
-                    'И начнем с Марса!', 'Присоединяйся!']
-    return '</br>'.join(promote_list)
-
-
-@app.route('/image_mars')
-def image_mars():
-    return f"""<!doctype html>
-                <html lang="en">
-                  <head>
-                    <meta charset="utf-8">
-                    <title>Привет, Марс!</title>
-                  </head>
-                  <body>
-                    <h1>Жди нас, Марс!</h1>
-                    <img src="{url_for('static', filename='img/mars.jpg')}" 
-           alt="здесь должна была быть картинка, но не нашлась">
-                    <p>Вот она какая, красная планета.</p>
-                  </body>
-                </html>"""
+user = User()
+user.name = "Пользователь 1"
+user.about = "биография пользователя 1"
+user.email = "email@email.ru"
+db_sess = db_session.create_session()
+db_sess.add(user)
+db_sess.commit()
+user = User()
+user.name = "Пользователь 2"
+user.about = "биография пользователя 2"
+user.email = "email2@email.ru"
+db_sess = db_session.create_session()
+db_sess.add(user)
+db_sess.commit()
+user = User()
+user.name = "Пользователь 3"
+user.about = "биография пользователя 3"
+user.email = "email3@email.ru"
+db_sess = db_session.create_session()
+db_sess.add(user)
+db_sess.commit()
 
 
 if __name__ == '__main__':
-    app.run(port=8080, host='127.0.0.1')
+    main()
